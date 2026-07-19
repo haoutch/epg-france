@@ -11,7 +11,7 @@ import unicodedata
 import urllib.request
 import zipfile
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from difflib import SequenceMatcher
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -38,6 +38,22 @@ MANUAL_ALIASES = {
     "rmc sport 2": ["rmc sport 2"],
     "equipe": ["l equipe", "lequipe", "la chaine l equipe"],
 }
+
+
+TIME_SHIFT_HOURS = -8
+
+
+def shift_xmltv_timestamp(value: str | None, hours: int = TIME_SHIFT_HOURS) -> str | None:
+    """Décale un horodatage XMLTV en conservant son fuseau d'origine."""
+    if not value:
+        return value
+    value = value.strip()
+    match = re.fullmatch(r"(\d{14})(?:\s*([+-]\d{4}))?", value)
+    if not match:
+        return value
+    dt = datetime.strptime(match.group(1), "%Y%m%d%H%M%S") + timedelta(hours=hours)
+    offset = match.group(2)
+    return dt.strftime("%Y%m%d%H%M%S") + (f" {offset}" if offset else "")
 
 QUALITY_WORDS = {
     "fr", "fhd", "hd", "uhd", "4k", "sd", "hevc", "backup", "vip",
@@ -211,6 +227,9 @@ def main() -> None:
             continue
         clone = ET.fromstring(ET.tostring(programme, encoding="utf-8"))
         clone.set("channel", target_id)
+        clone.set("start", shift_xmltv_timestamp(clone.attrib.get("start")) or clone.attrib.get("start", ""))
+        if clone.attrib.get("stop"):
+            clone.set("stop", shift_xmltv_timestamp(clone.attrib.get("stop")) or clone.attrib.get("stop", ""))
         output.append(clone)
         programmes += 1
 
