@@ -34,6 +34,11 @@ jobs:
       - name: Générer l'EPG
         run: python scripts/build_epg.py
 
+      - name: Vérifier les fichiers générés
+        run: |
+          echo "Contenu de public :"
+          ls -lah public
+
       - name: Configurer GitHub Pages
         uses: actions/configure-pages@v5
 
