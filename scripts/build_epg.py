@@ -1,11 +1,11 @@
-#!/usr/bin/env python3
+    #!/usr/bin/env python3
 import csv, gzip, io, json, re, sys, urllib.request, unicodedata
 from datetime import datetime, timedelta
 from difflib import SequenceMatcher
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parent.parent
 CONFIG = ROOT / 'config'
 OUT = ROOT
 SOURCE_URL = 'https://epg.pw/xmltv/epg_FR.xml.gz'
