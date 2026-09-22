@@ -1,4 +1,3 @@
-```python
 #!/usr/bin/env python3
 import csv, gzip, io, json, re, sys, urllib.request, unicodedata
 from datetime import datetime, timedelta
@@ -403,7 +402,6 @@ def main():
 
 if __name__ == '__main__':
     main()
-```
                 by_name.setdefault(norm(n), []).append((cid, n))
             elem.clear()
     return by_id, by_name
