@@ -226,8 +226,8 @@ def main():
                         elem.set("stop", shift_ts(elem.get("stop")))
 
                     root.append(elem)
-
-                elem.clear()
+                else:
+                    elem.clear()
 
     ET.ElementTree(root).write(
         out_path,
